@@ -64,11 +64,24 @@ Vector.prototype = {
             return this.clone();
         }
     },
+    limit: function(mag) {
+        if (this.mag > mag) {
+            this.normalize();
+            this.mult(mag);
+        }
+    },
+    constrain: function(a, b) {
+        this.x = constrain(this.x, a, b);
+        this.y = constrain(this.y, a, b);
+        this.z = constrain(this.z, a, b);
+
+    },
     normalize: function() {
         let mag = this.mag();
         this.x /= mag;
         this.y /= mag;
         this.z /= mag;
+        return this;
     },
     equals: function (v) {
         return this.x === v.x && this.y === v.y && this.z === v.z;
@@ -86,8 +99,11 @@ Vector.prototype = {
     mag: function () {
         return Math.sqrt(this.dot(this));
     },
+    magSq: function () {
+        return this.dot(this);
+    },
     unit: function () {
-        return this.dividemag();
+        return this.div(this.mag());
     },
     min: function () {
         return Math.min(Math.min(this.x, this.y), this.z);
@@ -219,6 +235,9 @@ Vector.fromArray = function (a) {
 };
 Vector.angleBetween = function (a, b) {
     return a.angleTo(b);
+};
+function fromBabylon(vec) {
+    return new Vector(vec.x, vec.y, vec.z);
 };
 
 function constrain(x, a, b) {
